@@ -1,0 +1,5 @@
+Blackjack Game with Quatloos, This Python script offers a command-line Blackjack game featuring quatloos, a fictional currency, where players can engage in rounds against the dealer. 
+The game supports customization with multiple decks and the addition of retriever cards, each valued at 21.  To play, execute the script in a Python environment, input the desired number of decks and a random seed for card shuffling. 
+Specify the number of retriever cards to include, and then place bets using quatloos. Throughout the game, players make decisions to hit or stay, winning quatloos for beating the dealer or losing them if they bust. Additional features include support for multiple decks, 
+allowing customization of retriever card quantities, and the use of quatloos for betting, with the player's balance updated after each round. For customization, adjust the num_decks and num_retrievers variables at the script's start to modify game settings. 
+Follow the on-screen prompts to place bets and make gameplay decisions. Feel free to explore and modify the code to enhance the game or tailor it to your preferences!
