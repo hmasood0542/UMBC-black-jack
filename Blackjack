@@ -1,0 +1,130 @@
+import random
+
+#asks the user for the amount of decks
+num_decks = int(input("How many decks of cards would you like to use? "))
+#asks for the random seed
+random_seed = input('What seed would you like to use? ')
+random.seed(random_seed)
+#asks the user for  how many retriver cards
+num_retrievers = int(input("How many Retriever cards would you like to add? "))
+
+def make_deck(num_decks, num_retrievers):
+    #[card name, card value, suite]
+    deck = [[2,2,0],[3,3,0],[4,4,0],[5,5,0],[6,6,0],[7,7,0],[8,8,0],[9,9,0],[10,10,0],["J",10,0],["Q",10,0],["K",10,0],["A",11,0] , [2,2,1],[3,3,1],[4,4,1],[5,5,1],[6,6,1],[7,7,1],[8,8,1],[9,9,1],[10,10,1],["J",10,1],["Q",10,1],["K",10,1],["A",11,1] , [2,2,2],[3,3,2],[4,4,2],[5,5,2],[6,6,2],[7,7,2],[8,8,2],[9,9,2],[10,10,2],["J",10,2],["Q",10,2],["K",10,2],["A",11,2] , [2,2,3],[3,3,3],[4,4,3],[5,5,3],[6,6,3],[7,7,3],[8,8,3],[9,9,3],[10,10,3],["J",10,3],["Q",10,3],["K",10,3],["A",11,3]]
+
+    # this creates the Retriver card deck   
+    retriver_card = [["R",21,4]]
+
+    #multiply the retriver card deck
+    retriver_card *= (num_retrievers)
+    #this will add the retriver cards into the deck
+    deck+=(retriver_card)
+    
+    random.shuffle(deck)
+    return deck
+
+def card_value(hand):
+    #this will get the calue for hand and add it to the counter and keep runing the loop until the sum is in the counter of all the cards 
+    #also if the card is the retriver card the value is returend as 21 
+    #the ace counter and the second for loop has to do with ace equaling both 11 and 1 
+    counter = 0
+    acecounter = 0
+    for value in hand:
+        if value[0] == "R":
+            return 21
+        elif value[0] == "A":
+            acecounter += 1
+
+        counter += value[1]
+    for i in range(acecounter):
+        if counter <= 10:
+            counter += 11
+        elif counter >= 11:
+            counter += 1
+
+    return counter
+
+def print_hand(hand):
+    #this allows the printing of multiple cards making possible for the player and dealer to have multiple cards. 
+    suite = ['\u2660', '\u2663', '\u2662', '\u2662', '*']
+    string = " "
+    for card in hand:
+        string += (str(card[0]) + suite[card[2]] + " ")
+        
+    return string
+    
+
+#def quatloos():
+  
+
+
+def game_loop(num_decks, num_retrievers):
+    suite = ['\u2660', '\u2663', '\u2662', '\u2662', '*']
+    blackout = '\u2588\u2588'
+    
+    quatloos = 100  # Initial quatloos for the first round
+    play_again = "yes"
+
+    while play_again.lower() in ["y", "yes"]:
+        deck = make_deck(num_decks, num_retrievers)
+
+        bet = int(input(f"You have {quatloos} quatloos, how many would you like to bet? "))
+
+        while bet > quatloos or bet <= 0:
+            bet = int(input(f"You have {quatloos} quatloos, how many would you like to bet? "))
+
+        dealer_card = [deck.pop(0), deck.pop(0)]
+        player_hand = [deck.pop(0), deck.pop(0)]
+
+        print("The dealer's hand is:", blackout + blackout, str(dealer_card[1][0]) + suite[dealer_card[1][2]])
+        print(f"Your hand is: ", print_hand(player_hand), f"and has value {card_value(player_hand)}")
+
+        decision = input("What would you like to do? [hit, stay]")
+
+        while decision == "hit":
+            player_hand.append(deck.pop(0))
+            print(f"Your hand is: ", print_hand(player_hand), f"and has value {card_value(player_hand)}")
+
+            if card_value(player_hand) > 21:
+                print("Busted! You lose.")
+                quatloos -= bet  # Deduct the bet amount from quatloos
+                print(f"You now have {quatloos} quatloos.")
+                play_again = input("Would you like to play again? ")
+                break
+
+            decision = input("What would you like to do? [hit, stay]")
+
+        while card_value(dealer_card) <= 16:
+            dealer_card.append(deck.pop(0))
+
+        print(f"The dealer's hand is: ", print_hand(dealer_card), f"and has value {card_value(dealer_card)}")
+
+        if card_value(player_hand) == card_value(dealer_card):
+            print("Push, no one wins")
+            quatloos -= bet
+        elif card_value(dealer_card) > 21:
+            print("Dealer busted, you win.")
+            quatloos += bet
+        elif card_value(player_hand) > card_value(dealer_card):
+            print("You beat the dealer!")
+            quatloos += bet
+        elif card_value(player_hand) < card_value(dealer_card):
+            print("Dealer wins")
+            quatloos -= bet
+        elif card_value(player_hand) == 21:
+            print("Blackjack, you win!")
+            quatloos += bet
+        elif card_value(dealer_card) == 21:
+            print("Blackjack, dealer wins!")
+            quatloos -= bet
+        elif card_value(player_hand) > 21:
+            print("You have busted, sorry")
+
+        play_again = input("Would you like to play again? ")
+
+    print(f"You ended the game with {quatloos} quatloos!")
+
+
+if __name__ == '__main__':
+    game_loop(num_decks, num_retrievers)
+message.txt
